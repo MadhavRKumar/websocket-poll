@@ -17,11 +17,30 @@ import {
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group"
 
+import { useEffect } from "react"
+
+import { socket } from "@/socket"
+
 export default function Page() {
+  useEffect(() => {
+    socket.on("connect", onConnect)
+    socket.on("disconnect", onDisconnect)
+
+    function onConnect() {
+      console.log("Connected to server with socket ID:", socket.id)
+    }
+
+    function onDisconnect() {
+      console.log("Disconnected from server")
+    }
+  })
+
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault()
     console.log("Form submitted")
+    socket.emit("check", { message: "Hello from the client!" })
   }
+
   return (
     <Card className="mx-auto mt-10 w-full sm:max-w-md">
       <CardHeader>
