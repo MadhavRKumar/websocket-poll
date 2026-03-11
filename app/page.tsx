@@ -1,19 +1,65 @@
+"use client"
+
 import { Button } from "@/components/ui/button"
+import {
+  Card,
+  CardContent,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card"
+import {
+  Field,
+  FieldDescription,
+  FieldGroup,
+  FieldLabel,
+} from "@/components/ui/field"
+import { Input } from "@/components/ui/input"
+import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group"
 
 export default function Page() {
+  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
+    e.preventDefault()
+    console.log("Form submitted")
+  }
   return (
-    <div className="flex min-h-svh p-6">
-      <div className="flex max-w-md min-w-0 flex-col gap-4 text-sm leading-loose">
-        <div>
-          <h1 className="font-medium">Project ready!</h1>
-          <p>You may now add components and start building.</p>
-          <p>We&apos;ve already added the button component for you.</p>
-          <Button className="mt-2">Button</Button>
-        </div>
-        <div className="font-mono text-xs text-muted-foreground">
-          (Press <kbd>d</kbd> to toggle dark mode)
-        </div>
-      </div>
-    </div>
+    <Card className="mx-auto mt-10 w-full sm:max-w-md">
+      <CardHeader>
+        <CardTitle>Create a Poll</CardTitle>
+      </CardHeader>
+      <CardContent>
+        <form id="poll-form" onSubmit={handleSubmit}>
+          <FieldGroup>
+            <Field>
+              <FieldLabel htmlFor="question">Question</FieldLabel>
+              <FieldDescription>Enter the poll question.</FieldDescription>
+              <Input id="question" placeholder="What is your favorite color?" />
+            </Field>
+            <Field>
+              <FieldLabel htmlFor="options">Options</FieldLabel>
+              <FieldDescription>
+                Enter the poll options, one per line.
+              </FieldDescription>
+              <InputGroup>
+                <InputGroupTextarea
+                  id="options"
+                  placeholder="Red&#10;Green&#10;Blue"
+                />
+              </InputGroup>
+            </Field>
+          </FieldGroup>
+        </form>
+      </CardContent>
+
+      <CardFooter>
+        <FieldGroup>
+          <Field>
+            <Button variant="outline" type="submit" form="poll-form">
+              Create Poll
+            </Button>
+          </Field>
+        </FieldGroup>
+      </CardFooter>
+    </Card>
   )
 }
