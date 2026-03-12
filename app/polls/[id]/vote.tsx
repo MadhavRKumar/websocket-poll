@@ -21,7 +21,7 @@ interface VoteProps {
   pollId: string
   question: string
   options: string[]
-  votes: Map<number, number>
+  votes: { [optionIndex: number]: number }
 }
 
 export default function Vote({ pollId, question, options, votes }: VoteProps) {
@@ -29,10 +29,15 @@ export default function Vote({ pollId, question, options, votes }: VoteProps) {
   const [currentVotes, setCurrentVotes] = useState(votes)
 
   useEffect(() => {
-    // Listen for vote updates from the server
-    socket.on("voteUpdate", (updatedVotes: Map<number, number>) => {
-      setCurrentVotes(updatedVotes)
-    })
+    // when the component mounts, join the poll room to receive updates
+    socket.emit("joinPoll", pollId)
+
+    socket.on(
+      "voteUpdate",
+      (updatedVotes: { [optionIndex: number]: number }) => {
+        setCurrentVotes(updatedVotes)
+      }
+    )
 
     // Clean up the socket listener on component unmount
     return () => {
@@ -42,7 +47,6 @@ export default function Vote({ pollId, question, options, votes }: VoteProps) {
 
   const handleVote = () => {
     if (selectedOption !== null) {
-      // Emit the vote to the server
       socket.emit("vote", { pollId, optionIndex: selectedOption })
     }
   }
@@ -80,6 +84,19 @@ export default function Vote({ pollId, question, options, votes }: VoteProps) {
             </Button>
           </FieldGroup>
         </CardFooter>
+      </Card>
+      <Card className="mx-auto mt-6 w-full sm:max-w-md">
+        <CardHeader>
+          <CardTitle className="text-center">Current Votes</CardTitle>
+        </CardHeader>
+        <CardContent>
+          {options.map((option, index) => (
+            <div key={index} className="flex justify-between">
+              <span>{option}</span>
+              <span>{currentVotes[index] || 0} votes</span>
+            </div>
+          ))}
+        </CardContent>
       </Card>
     </div>
   )

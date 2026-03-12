@@ -1,6 +1,7 @@
 import { createServer } from "node:http"
 import next from "next"
 import { Server } from "socket.io"
+import pollService from "@/lib/pollService"
 
 const dev = process.env.NODE_ENV !== "production"
 const hostname = "localhost"
@@ -15,7 +16,18 @@ app.prepare().then(() => {
   const io = new Server(httpServer)
 
   io.on("connection", (socket) => {
-    socket.on("check", (data) => {})
+    // create a room for each poll
+    socket.on("joinPoll", (pollId) => {
+      socket.join(pollId)
+    })
+
+    socket.on("vote", ({ pollId, optionIndex }) => {
+      const poll = pollService.get(pollId)
+      if (poll) {
+        const votes = pollService.vote(pollId, optionIndex)
+        io.to(pollId).emit("voteUpdate", votes)
+      }
+    })
   })
 
   httpServer
