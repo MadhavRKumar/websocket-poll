@@ -17,28 +17,29 @@ import {
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group"
 
-import { useEffect } from "react"
-
-import { socket } from "@/socket"
-
 export default function Page() {
-  useEffect(() => {
-    socket.on("connect", onConnect)
-    socket.on("disconnect", onDisconnect)
-
-    function onConnect() {
-      console.log("Connected to server with socket ID:", socket.id)
-    }
-
-    function onDisconnect() {
-      console.log("Disconnected from server")
-    }
-  })
-
-  const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
-    console.log("Form submitted")
-    socket.emit("check", { message: "Hello from the client!" })
+  const handleSubmit = (formData: FormData) => {
+    console.log("Form submitted with data:", formData)
+    const question = formData.get("question") as string
+    const optionsText = formData.get("options") as string
+    const options = optionsText
+      .split("\n")
+      .map((opt) => opt.trim())
+      .filter(Boolean)
+    fetch("/polls", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ question, options }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Poll created:", data)
+      })
+      .catch((error) => {
+        console.error("Error creating poll:", error)
+      })
   }
 
   return (
@@ -47,12 +48,16 @@ export default function Page() {
         <CardTitle>Create a Poll</CardTitle>
       </CardHeader>
       <CardContent>
-        <form id="poll-form" onSubmit={handleSubmit}>
+        <form id="poll-form" action={handleSubmit}>
           <FieldGroup>
             <Field>
               <FieldLabel htmlFor="question">Question</FieldLabel>
               <FieldDescription>Enter the poll question.</FieldDescription>
-              <Input id="question" placeholder="What is your favorite color?" />
+              <Input
+                id="question"
+                name="question"
+                placeholder="What is your favorite color?"
+              />
             </Field>
             <Field>
               <FieldLabel htmlFor="options">Options</FieldLabel>
@@ -62,6 +67,7 @@ export default function Page() {
               <InputGroup>
                 <InputGroupTextarea
                   id="options"
+                  name="options"
                   placeholder="Red&#10;Green&#10;Blue"
                 />
               </InputGroup>

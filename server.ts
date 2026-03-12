@@ -15,9 +15,7 @@ app.prepare().then(() => {
   const io = new Server(httpServer)
 
   io.on("connection", (socket) => {
-    socket.on("check", (data) => {
-      console.log("Received 'check' event with data:", data)
-    })
+    socket.on("check", (data) => {})
   })
 
   httpServer
