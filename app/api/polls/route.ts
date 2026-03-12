@@ -8,6 +8,7 @@ export async function POST(request: Request) {
   }
 
   const poll = pollService.createPoll(question, options)
+  console.log(pollService.polls) // Debug log to check all polls in the service
 
   return Response.json(poll)
 }

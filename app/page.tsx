@@ -30,7 +30,7 @@ export default function Page() {
       .split("\n")
       .map((opt) => opt.trim())
       .filter(Boolean)
-    fetch("/polls", {
+    fetch("/api/polls", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -93,7 +93,7 @@ export default function Page() {
         </CardFooter>
       </Card>
       {pollCreated && (
-        <Alert variant="success" className="mt-4">
+        <Alert className="mt-4">
           <AlertTitle>Poll Created</AlertTitle>
           <AlertDescription>
             Your poll has been successfully created. Use{" "}

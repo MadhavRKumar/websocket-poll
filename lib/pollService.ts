@@ -30,11 +30,16 @@ class PollService {
     return poll
   }
 
+  get(pollId: string): Poll | undefined {
+    return this.polls.get(pollId)
+  }
+
   private generateId(): string {
     return Math.random().toString(36).substr(2, 9)
   }
 }
 
-const pollService = new PollService()
+// Ensure a single instance of PollService is used across the application
+globalThis.pollService = globalThis.pollService || new PollService()
 
-export default pollService
+export default globalThis.pollService
