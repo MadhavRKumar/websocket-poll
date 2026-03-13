@@ -6,7 +6,10 @@ in real-time.
 
 ## Setup
 
-Once cloned, run `yarn install` to install dependencies.
+Make sure you have Node version 22.13 or higher installed. If using `nvm`, run `nvm use` to switch
+to the correct version.
+
+Once this repo is cloned, run `yarn install` to install dependencies.
 
 ## Usage
 
