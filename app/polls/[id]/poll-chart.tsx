@@ -2,13 +2,14 @@
 
 import { Bar, BarChart, XAxis, YAxis } from "recharts"
 import { ChartContainer, type ChartConfig } from "@/components/ui/chart"
+import { Votes } from "@/lib/types"
 
 export default function PollChart({
   options,
   votes,
 }: {
   options: string[]
-  votes: { [optionIndex: number]: number }
+  votes: Votes
 }) {
   const data = options.map((option, index) => ({
     name: option,

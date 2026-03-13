@@ -1,13 +1,4 @@
-type Poll = {
-  id: string
-  question: string
-  options: string[]
-  votes: Votes
-}
-
-type Votes = {
-  [optionIndex: number]: number
-}
+import { Poll, Votes } from "./types"
 
 class PollService {
   polls: Map<string, Poll>

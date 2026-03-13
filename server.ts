@@ -1,7 +1,7 @@
 import { createServer } from "node:http"
 import next from "next"
 import { Server } from "socket.io"
-import pollService from "@/lib/pollService"
+import pollService from "@/lib/poll-service"
 
 const dev = process.env.NODE_ENV !== "production"
 const hostname = "localhost"

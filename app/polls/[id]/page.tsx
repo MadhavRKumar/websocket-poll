@@ -1,4 +1,4 @@
-import pollService from "@/lib/pollService"
+import pollService from "@/lib/poll-service"
 import Vote from "./vote"
 
 export default async function PollPage({
@@ -6,14 +6,14 @@ export default async function PollPage({
 }: {
   params: Promise<{ id: string }>
 }) {
-  const { id: pollId } = await params
-  const pollData = pollService.get(pollId)
+  const { id } = await params
+  const pollData = pollService.get(id)
 
   return (
     <div>
       {pollData && (
         <Vote
-          pollId={pollData.id}
+          id={pollData.id}
           question={pollData.question}
           options={pollData.options}
           votes={pollData.votes}

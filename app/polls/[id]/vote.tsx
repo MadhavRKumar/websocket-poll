@@ -1,6 +1,3 @@
-// takes the poll data as a prop and renders the voting interface
-// It allows users to select an option and submit their vote, which updates the poll's vote counts in real-time using the socket.io connection established in the server.ts file. The component also listens for updates from the server to reflect changes in the vote counts immediately.
-
 "use client"
 
 import { useEffect, useState } from "react"
@@ -17,15 +14,9 @@ import {
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
 import PollChart from "./poll-chart"
+import { Poll, Votes } from "@/lib/types"
 
-interface VoteProps {
-  pollId: string
-  question: string
-  options: string[]
-  votes: { [optionIndex: number]: number }
-}
-
-export default function Vote({ pollId, question, options, votes }: VoteProps) {
+export default function Vote({ id: pollId, question, options, votes }: Poll) {
   const [selectedOption, setSelectedOption] = useState<number | null>(null)
   const [currentVotes, setCurrentVotes] = useState(votes)
 
@@ -33,12 +24,9 @@ export default function Vote({ pollId, question, options, votes }: VoteProps) {
     // when the component mounts, join the poll room to receive updates
     socket.emit("joinPoll", pollId)
 
-    socket.on(
-      "voteUpdate",
-      (updatedVotes: { [optionIndex: number]: number }) => {
-        setCurrentVotes(updatedVotes)
-      }
-    )
+    socket.on("voteUpdate", (updatedVotes: Votes) => {
+      setCurrentVotes(updatedVotes)
+    })
 
     // Clean up the socket listener on component unmount
     return () => {

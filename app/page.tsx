@@ -17,34 +17,38 @@ import {
 } from "@/components/ui/field"
 import { Input } from "@/components/ui/input"
 import { InputGroup, InputGroupTextarea } from "@/components/ui/input-group"
+import Link from "next/link"
 import { useState } from "react"
 
 export default function Page() {
   const [pollCreated, setPollCreated] = useState(false)
+  const [error, setError] = useState<string | null>(null)
   const [pollLink, setPollLink] = useState("")
 
-  const handleSubmit = (formData: FormData) => {
+  const handleSubmit = async (formData: FormData) => {
     const question = formData.get("question") as string
     const optionsText = formData.get("options") as string
     const options = optionsText
       .split("\n")
       .map((opt) => opt.trim())
       .filter(Boolean)
-    fetch("/api/polls", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ question, options }),
-    })
-      .then((response) => response.json())
-      .then((data) => {
-        setPollCreated(true)
-        setPollLink(`/polls/${data.id}`)
+
+    try {
+      const response = await fetch("/api/polls", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ question, options }),
       })
-      .catch((error) => {
-        console.error("Error creating poll:", error)
-      })
+
+      const data = await response.json()
+      setPollCreated(true)
+      setPollLink(`/polls/${data.id}`)
+    } catch (error) {
+      setError("Failed to create poll. Please try again.")
+      setPollCreated(false)
+    }
   }
 
   return (
@@ -97,11 +101,17 @@ export default function Page() {
           <AlertTitle>Poll Created</AlertTitle>
           <AlertDescription>
             Your poll has been successfully created. Use{" "}
-            <a href={pollLink} className="underline">
+            <Link href={pollLink} className="underline">
               {pollLink}
-            </a>{" "}
+            </Link>{" "}
             to view and share your poll.
           </AlertDescription>
+        </Alert>
+      )}
+      {error && (
+        <Alert variant="destructive" className="mt-4">
+          <AlertTitle>Error</AlertTitle>
+          <AlertDescription>{error}</AlertDescription>
         </Alert>
       )}
     </div>
