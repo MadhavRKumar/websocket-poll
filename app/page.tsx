@@ -46,7 +46,9 @@ export default function Page() {
       setPollCreated(true)
       setPollLink(`/polls/${data.id}`)
     } catch (error) {
-      setError("Failed to create poll. Please try again.")
+      const errorMessage =
+        error instanceof Error ? error.message : "Unknown error"
+      setError(errorMessage)
       setPollCreated(false)
     }
   }

@@ -32,7 +32,7 @@ export default function Vote({ id: pollId, question, options, votes }: Poll) {
     return () => {
       socket.off("voteUpdate")
     }
-  }, [])
+  }, [pollId])
 
   const handleVote = () => {
     if (selectedOption !== null) {
