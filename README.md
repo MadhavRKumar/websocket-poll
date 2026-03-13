@@ -6,11 +6,11 @@ in real-time.
 
 ## Setup
 
-Once cloned, run `npm install` to install dependencies.
+Once cloned, run `yarn install` to install dependencies.
 
 ## Usage
 
-Run `npm start` to start the development server. The app will be available at `http://localhost:3000`.
+Run `yarn start` to start development server. The app will be available at `http://localhost:3000`.
 
 ## Limitations
 
