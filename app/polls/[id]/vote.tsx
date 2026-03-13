@@ -16,6 +16,7 @@ import {
 } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { FieldGroup } from "@/components/ui/field"
+import PollChart from "./poll-chart"
 
 interface VoteProps {
   pollId: string
@@ -90,12 +91,7 @@ export default function Vote({ pollId, question, options, votes }: VoteProps) {
           <CardTitle className="text-center">Current Votes</CardTitle>
         </CardHeader>
         <CardContent>
-          {options.map((option, index) => (
-            <div key={index} className="flex justify-between">
-              <span>{option}</span>
-              <span>{currentVotes[index] || 0} votes</span>
-            </div>
-          ))}
+          <PollChart options={options} votes={currentVotes} />
         </CardContent>
       </Card>
     </div>
